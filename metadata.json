@@ -1,0 +1,7 @@
+{
+  "name": "CoolBreeze HVAC - Demo",
+  "description": "A smart, AI-powered website for an HVAC company featuring an intelligent chatbot for inquiries, quotes, and booking, designed to convert visitors into customers and streamline operations.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
