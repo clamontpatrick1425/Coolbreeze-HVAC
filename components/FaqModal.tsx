@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { faqData } from '../constants';
 import { getFaqAnswer } from '../services/geminiService';
@@ -102,7 +103,7 @@ export const FaqModal: React.FC<FaqModalProps> = ({ onClose }) => {
                     <QuestionMarkCircleIcon className="w-6 h-6 mr-2" />
                     <h3 className="text-lg font-bold">Can't find an answer?</h3>
                 </div>
-                <p className="text-sm text-gray-600 mb-3">Ask our AI assistant, Hannah, and she'll try to answer based on our knowledge base.</p>
+                <p className="text-sm text-gray-600 mb-3">Ask our AI assistant, Claire, and she'll try to answer based on our knowledge base.</p>
                 <div className="flex flex-col sm:flex-row gap-2">
                     <input
                         type="text"
@@ -119,7 +120,7 @@ export const FaqModal: React.FC<FaqModalProps> = ({ onClose }) => {
                 {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
                 {aiAnswer && (
                     <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-gray-800">
-                        <p className="font-semibold text-blue-800 mb-1">Hannah says:</p>
+                        <p className="font-semibold text-blue-800 mb-1">Claire says:</p>
                         <p>{aiAnswer}</p>
                     </div>
                 )}

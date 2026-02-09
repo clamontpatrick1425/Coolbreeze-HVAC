@@ -95,7 +95,7 @@ export const ToolsSection: React.FC<ToolsSectionProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <ToolCard 
                         title="Visual Diagnosis"
-                        description="Identify HVAC errors and part damage instantly using Bree, our AI analyzer."
+                        description="Identify HVAC errors and part damage instantly using Claire, our AI analyzer."
                         icon={CameraIcon}
                         onClick={onOpenDiagnosis}
                         badge="AI-Powered"

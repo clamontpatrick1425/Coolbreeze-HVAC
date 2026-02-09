@@ -31,7 +31,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
 
                 // 2. If not found, generate a new one
                 setIsGenerating(true);
-                const result = await generateHeroVideo("Cinematic wide shot of professional HVAC technicians installing a modern AC system in a beautiful luxury home living room, daylight, 4k");
+                const result = await generateHeroVideo("Cinematic 8 second video of professional HVAC technicians installing a modern AC system in a beautiful luxury home living room, daylight, 4k");
                 
                 if (result && result instanceof Blob) {
                     await saveVideo(result);
@@ -59,12 +59,15 @@ export const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
             <div className="absolute inset-0 z-0">
                 {videoUrl ? (
                     <video 
+                        key={videoUrl}
                         src={videoUrl} 
                         autoPlay 
                         loop 
                         muted 
                         playsInline 
                         className="w-full h-full object-cover opacity-40 transition-opacity duration-1000"
+                        onPlay={() => console.log("Video started playing")}
+                        onError={(e) => console.error("Video playback error", e)}
                     />
                 ) : (
                     <div 

@@ -36,7 +36,7 @@ export const VisualDiagnosis: React.FC<VisualDiagnosisProps> = ({ onImageUpload 
                             </h2>
                             <p className="text-xl text-gray-600 max-w-xl leading-relaxed">
                                 Don't spend hours on hold describing a weird light or a broken part. 
-                                Snap a photo of your AC unit, thermostat error code, or filter, and Bree 
+                                Snap a photo of your AC unit, thermostat error code, or filter, and Claire 
                                 will identify the issue in seconds.
                             </p>
                         </div>
@@ -69,7 +69,7 @@ export const VisualDiagnosis: React.FC<VisualDiagnosisProps> = ({ onImageUpload 
 
                             <div className="text-center mt-8 space-y-2">
                                 <h3 className="text-2xl font-bold text-gray-900">Try it out</h3>
-                                <p className="text-gray-500 font-medium">Open the chat to start a diagnosis with Bree</p>
+                                <p className="text-gray-500 font-medium">Open the chat to start a diagnosis with Claire</p>
                             </div>
 
                             <div 
@@ -88,7 +88,7 @@ export const VisualDiagnosis: React.FC<VisualDiagnosisProps> = ({ onImageUpload 
                                 </div>
                                 <div className="mt-6 text-center">
                                     <p className="text-lg font-bold text-gray-800">Snap or Upload Photo</p>
-                                    <p className="text-sm text-gray-400 font-medium italic">Bree will analyze it instantly in the chat window</p>
+                                    <p className="text-sm text-gray-400 font-medium italic">Claire will analyze it instantly in the chat window</p>
                                 </div>
                             </div>
 

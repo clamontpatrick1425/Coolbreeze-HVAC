@@ -70,7 +70,7 @@ export const Chatbot = forwardRef((props: ChatbotProps, ref) => {
             if (messages.length > 0) {
                  addMessage({
                     id: Date.now().toString() + 'nudge',
-                    text: "I see you've uploaded a photo! I'm Bree, and I can analyze this for you. Just hit send when you're ready.",
+                    text: "I see you've uploaded a photo! I'm Claire, and I can analyze this for you. Just hit send when you're ready.",
                     sender: 'bot',
                     timestamp: new Date().toISOString()
                  });
@@ -240,7 +240,7 @@ export const Chatbot = forwardRef((props: ChatbotProps, ref) => {
             chatHistoryRef.current.push({ role: 'user', parts: [{ text: `[SYSTEM_NOTE: My name is ${currentInput}.]` }] });
 
         } else {
-            // If user only uploads image without text, provide a default prompt for Bree
+            // If user only uploads image without text, provide a default prompt for Claire
             const finalInput = currentInput.trim() || "Please analyze this image and help me identify any issues.";
             await processAndSend(finalInput, currentImageFile);
         }
@@ -293,7 +293,7 @@ export const Chatbot = forwardRef((props: ChatbotProps, ref) => {
                     } else {
                         setMessages([{ 
                             id: 'init', 
-                            text: createSuggestionNode("Hello! I'm Bree, your virtual assistant for CoolBreeze HVAC. Who am I chatting with today?"),
+                            text: createSuggestionNode("Hello! I'm Claire, your virtual assistant for CoolBreeze HVAC. Who am I chatting with today?"),
                             sender: 'bot', 
                             timestamp: new Date().toISOString() 
                         }]);
@@ -332,8 +332,8 @@ export const Chatbot = forwardRef((props: ChatbotProps, ref) => {
                 {/* Teaser Bubble */}
                 <div className={`absolute bottom-full right-0 mb-4 w-72 bg-white rounded-2xl shadow-xl p-6 border border-blue-100 transition-all duration-500 transform ${showTeaser ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
                     <div className="flex items-center gap-3 mb-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-800 text-white flex items-center justify-center font-bold text-sm">B</div>
-                        <span className="font-bold text-blue-800 text-lg">Bree</span>
+                        <div className="w-8 h-8 rounded-full bg-blue-800 text-white flex items-center justify-center font-bold text-sm">C</div>
+                        <span className="font-bold text-blue-800 text-lg">Claire</span>
                     </div>
                     <p className="text-gray-700 text-lg leading-relaxed">Hi there! Need help with your AC or a quick quote? I'm here to help! 👋</p>
                     <div className="absolute top-full right-10 w-4 h-4 bg-white border-r border-b border-blue-100 transform rotate-45 -translate-y-2"></div>
@@ -353,9 +353,9 @@ export const Chatbot = forwardRef((props: ChatbotProps, ref) => {
             <div className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[calc(100%-2rem)] max-w-3xl h-[85vh] max-h-[800px] bg-white rounded-2xl shadow-2xl flex flex-col transition-all duration-300 origin-bottom-right z-50 ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
                 <div className="flex-shrink-0 bg-blue-800 text-white p-6 flex justify-between items-center rounded-t-2xl">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-white text-blue-800 flex items-center justify-center font-bold text-2xl">B</div>
+                        <div className="w-12 h-12 rounded-full bg-white text-blue-800 flex items-center justify-center font-bold text-2xl">C</div>
                         <div>
-                            <h3 className="font-bold text-2xl">Bree</h3>
+                            <h3 className="font-bold text-2xl">Claire</h3>
                             <div className="flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></span>
                                 <p className="text-base opacity-80">Online & Ready to Help</p>
@@ -370,7 +370,7 @@ export const Chatbot = forwardRef((props: ChatbotProps, ref) => {
                     <div className="space-y-6">
                         {messages.map((msg) => (
                             <div key={msg.id} className={`flex items-end gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                {msg.sender === 'bot' && <div className="w-10 h-10 rounded-full bg-blue-800 text-white flex items-center justify-center font-bold flex-shrink-0 text-lg">B</div>}
+                                {msg.sender === 'bot' && <div className="w-10 h-10 rounded-full bg-blue-800 text-white flex items-center justify-center font-bold flex-shrink-0 text-lg">C</div>}
                                 <div className={`max-w-[85%] p-5 rounded-3xl shadow-sm ${msg.sender === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white text-gray-800 rounded-bl-none border border-gray-100'}`}>
                                     {typeof msg.text === 'string' ? <p className="text-xl leading-relaxed">{msg.text}</p> : <div className="text-xl leading-relaxed">{msg.text}</div>}
                                 </div>
@@ -391,7 +391,7 @@ export const Chatbot = forwardRef((props: ChatbotProps, ref) => {
                         )}
                          {isLoading && (
                             <div className="flex items-end gap-3 justify-start">
-                                <div className="w-10 h-10 rounded-full bg-blue-800 text-white flex items-center justify-center font-bold flex-shrink-0 text-lg">B</div>
+                                <div className="w-10 h-10 rounded-full bg-blue-800 text-white flex items-center justify-center font-bold flex-shrink-0 text-lg">C</div>
                                 <div className="max-w-[85%] p-5 rounded-3xl bg-white text-gray-800 rounded-bl-none border border-gray-100 shadow-sm">
                                     <div className="flex items-center space-x-2">
                                         <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>

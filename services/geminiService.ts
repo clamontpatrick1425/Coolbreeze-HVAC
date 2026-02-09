@@ -10,7 +10,7 @@ if (!API_KEY) {
 
 const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
-const hannahSystemInstruction = `You are "Hannah", a friendly, professional, and highly efficient AI Receptionist for "CoolBreeze HVAC". You are a true orchestrator of the user experience.
+const claireChatSystemInstruction = `You are "Claire", a friendly, professional, and highly efficient AI Receptionist for "CoolBreeze HVAC". You are a true orchestrator of the user experience.
 Your primary goals are:
 1. Greet visitors warmly and offer assistance.
 2. Answer questions accurately using business info and web search for current topics.
@@ -127,7 +127,7 @@ export async function getGeminiResponse(
             model: 'gemini-3-flash-preview',
             contents: contents,
             config: {
-                systemInstruction: hannahSystemInstruction,
+                systemInstruction: claireChatSystemInstruction,
                 tools: [{ functionDeclarations: tools }],
             },
         });
@@ -159,7 +159,7 @@ export async function performGoogleSearch(query: string): Promise<{ text: string
 }
 
 
-const claireSystemInstruction = `You are "Claire", an elite AI voice agent for "CoolBreeze HVAC". 
+const claireVoiceSystemInstruction = `You are "Claire", an elite AI voice agent for "CoolBreeze HVAC". 
 
 CRITICAL - CONNECTION STARTUP:
 As soon as the connection is open, you MUST take the first turn immediately. 
@@ -196,7 +196,7 @@ export function startClaireVoiceSession(callbacks: {
                 speechConfig: {
                     voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } },
                 },
-                systemInstruction: claireSystemInstruction,
+                systemInstruction: claireVoiceSystemInstruction,
             },
         });
         return sessionPromise;
@@ -269,7 +269,7 @@ export async function getFaqAnswer(question: string): Promise<{ text: string } |
 
     const knowledgeBase = faqData.map(item => `Q: ${item.question}\nA: ${item.answer}`).join('\n\n');
 
-    const systemInstruction = `You are "Hannah", a helpful AI assistant for CoolBreeze HVAC. Your job is to answer the user's question based *only* on the provided knowledge base.
+    const systemInstruction = `You are "Claire", a helpful AI assistant for CoolBreeze HVAC. Your job is to answer the user's question based *only* on the provided knowledge base.
     - If the answer is in the knowledge base, provide it in a clear and concise way.
     - If the answer is not in the knowledge base, politely state that you don't have that information and suggest they contact the company directly for more specific questions.
     - Do not use any external knowledge or make up answers. Stick strictly to the text provided.`;
