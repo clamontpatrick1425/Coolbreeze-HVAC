@@ -81,19 +81,14 @@ export const Chatbot = forwardRef((props: ChatbotProps, ref) => {
     const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     useEffect(scrollToBottom, [messages, isLoading]);
 
-    // Proactive Initiation: Show teaser bubble then auto-open
+    // Proactive Initiation: Show teaser bubble ONLY (Removed auto-open)
     useEffect(() => {
         const teaserTimer = setTimeout(() => {
             if (!hasOpenedOnce) setShowTeaser(true);
-        }, 2500);
-
-        const openTimer = setTimeout(() => {
-            if (!hasOpenedOnce) setIsOpen(true);
-        }, 6000);
+        }, 3000);
 
         return () => {
             clearTimeout(teaserTimer);
-            clearTimeout(openTimer);
         };
     }, [hasOpenedOnce]);
     
@@ -400,7 +395,7 @@ export const Chatbot = forwardRef((props: ChatbotProps, ref) => {
                                 <div className="max-w-[85%] p-5 rounded-3xl bg-white text-gray-800 rounded-bl-none border border-gray-100 shadow-sm">
                                     <div className="flex items-center space-x-2">
                                         <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                        <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                        <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.15s] mx-2"></div>
                                         <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce"></div>
                                     </div>
                                 </div>

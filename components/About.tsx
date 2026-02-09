@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect, useRef } from 'react';
+import { generateMarketingImage } from '../services/geminiService';
 
 const useCountUp = (end: number, duration: number = 2000) => {
     const [count, setCount] = useState(0);
@@ -59,6 +61,9 @@ const StatCard: React.FC<{ value: number; label: string; suffix?: string; color:
 export const About: React.FC = () => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(false);
+    const fallbackImage = "https://images.unsplash.com/photo-1581094794329-cd1361ddee2f?q=80&w=2787&auto=format&fit=crop";
+    const [technicianImage, setTechnicianImage] = useState<string>(fallbackImage);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -75,8 +80,44 @@ export const About: React.FC = () => {
             observer.observe(sectionRef.current);
         }
 
+        // Check for persistent AI generated image
+        try {
+            const cachedImage = localStorage.getItem('hvac_expert_image');
+            if (cachedImage && cachedImage.startsWith('data:image')) {
+                setTechnicianImage(cachedImage);
+            } else {
+                // Generate unique asset if not found
+                setIsGenerating(true);
+                generateMarketingImage("A friendly, professional HVAC technician smiling while working on a modern outdoor AC unit, sunny day, residential setting")
+                    .then(res => {
+                        if ('data' in res) {
+                            const url = `data:${res.mimeType};base64,${res.data}`;
+                            setTechnicianImage(url);
+                            try {
+                                localStorage.setItem('hvac_expert_image', url);
+                            } catch (e) {
+                                console.warn("Could not save image to local storage (quota exceeded or disabled).");
+                            }
+                        }
+                    })
+                    .catch(err => console.error("Failed to generate image", err))
+                    .finally(() => setIsGenerating(false));
+            }
+        } catch (e) {
+            console.error("Error accessing local storage", e);
+        }
+
         return () => observer.disconnect();
     }, []);
+
+    const handleImageError = () => {
+        if (technicianImage !== fallbackImage) {
+            console.warn("Generated image failed to load, reverting to fallback.");
+            setTechnicianImage(fallbackImage);
+            // Clear bad cache if it exists
+            try { localStorage.removeItem('hvac_expert_image'); } catch(e) {}
+        }
+    };
 
     return (
         <section id="about" ref={sectionRef} className={`py-16 bg-gray-50 fade-in-section ${isVisible ? 'is-visible' : ''}`}>
@@ -112,12 +153,20 @@ export const About: React.FC = () => {
                            <StatCard value={100} label="A+ BBB Rating" color="green" />
                         </div>
                     </div>
-                    <div className="rounded-xl overflow-hidden shadow-2xl">
+                    <div className={`rounded-xl overflow-hidden shadow-2xl relative group h-[500px] bg-gray-200 ${isGenerating ? 'animate-pulse' : ''}`}>
                         <img 
-                            src="https://images.unsplash.com/photo-1617103995832-e5a49b29e7b2?q=80&w=1974&auto=format&fit=crop" 
+                            src={technicianImage} 
                             alt="Friendly HVAC technician working on an AC unit"
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover transition-all duration-1000"
+                            onError={handleImageError}
                         />
+                        {isGenerating && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                                <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-blue-800 font-bold text-sm shadow-lg">
+                                    Creating Custom AI Image...
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -290,3 +290,59 @@ export async function getFaqAnswer(question: string): Promise<{ text: string } |
         return { error: "Sorry, I'm having trouble finding an answer right now. Please try again later." };
     }
 }
+
+export async function generateMarketingImage(prompt: string): Promise<{ data: string, mimeType: string } | { error: string }> {
+    if (!ai) {
+        return { error: "AI service is not available." };
+    }
+    try {
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash-image',
+            contents: { parts: [{ text: prompt }] },
+        });
+        
+        for (const part of response.candidates?.[0]?.content?.parts || []) {
+            if (part.inlineData) {
+                return { data: part.inlineData.data, mimeType: part.inlineData.mimeType };
+            }
+        }
+        return { error: "No image data found in response." };
+    } catch (error: any) {
+        console.error("Error generating marketing image:", error);
+        return { error: error.message || "Failed to generate image." };
+    }
+}
+
+export async function generateHeroVideo(prompt: string): Promise<Blob | { error: string }> {
+    if (!ai || !API_KEY) return { error: "AI not initialized or API key missing" };
+    
+    try {
+        let operation = await ai.models.generateVideos({
+            model: 'veo-3.1-fast-generate-preview',
+            prompt: prompt,
+            config: {
+                numberOfVideos: 1,
+                resolution: '1080p',
+                aspectRatio: '16:9'
+            }
+        });
+
+        // Polling loop to check for completion
+        while (!operation.done) {
+            await new Promise(resolve => setTimeout(resolve, 5000)); // Check every 5 seconds
+            operation = await ai.operations.getVideosOperation({ operation: operation });
+        }
+
+        const videoUri = operation.response?.generatedVideos?.[0]?.video?.uri;
+        if (!videoUri) return { error: "No video URI returned from generation." };
+
+        // Fetch the video content using the URI + API Key
+        const response = await fetch(`${videoUri}&key=${API_KEY}`);
+        if (!response.ok) throw new Error("Failed to fetch generated video content.");
+        
+        return await response.blob();
+    } catch (e: any) {
+        console.error("Video generation failed:", e);
+        return { error: e.message || "Unknown error during video generation" };
+    }
+}

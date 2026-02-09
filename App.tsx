@@ -24,6 +24,9 @@ import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { TermsOfServiceModal } from './components/TermsOfServiceModal';
 import { VisualDiagnosis } from './components/VisualDiagnosis';
 import { ToolsSection } from './components/ToolsSection';
+import { RatingWidget } from './components/RatingWidget';
+import { ReviewsModal } from './components/ReviewsModal';
+import { LeaveReviewModal } from './components/LeaveReviewModal';
 
 const TroubleshootModalContent: React.FC<{ onBookNow: (service: ServiceType) => void, onClose: () => void }> = ({ onBookNow, onClose }) => {
     const [diagnosticResult, setDiagnosticResult] = useState<{ text: string; service: ServiceType } | null>(null);
@@ -106,6 +109,10 @@ const App: React.FC = () => {
     const [isEstimatorOpen, setIsEstimatorOpen] = useState(false);
     const [isContactOpen, setIsContactOpen] = useState(false);
 
+    // New Modal States for Reviews
+    const [isReviewsModalOpen, setIsReviewsModalOpen] = useState(false);
+    const [isLeaveReviewModalOpen, setIsLeaveReviewModalOpen] = useState(false);
+
     // Tool Modal States
     const [isTroubleshootModalOpen, setIsTroubleshootModalOpen] = useState(false);
     const [isVisualDiagnosisModalOpen, setIsVisualDiagnosisModalOpen] = useState(false);
@@ -146,7 +153,7 @@ const App: React.FC = () => {
     const openTestimonialsModal = () => setIsTestimonialsOpen(true);
     const closeTestimonialsModal = () => setIsTestimonialsOpen(false);
 
-    const openEstimatorModal = () => setIsEstimatorOpen(true);
+    const openEstimatorModal = () => setIsEstimatorOpen(false);
     const closeEstimatorModal = () => setIsEstimatorOpen(false);
 
     const openContactModal = () => setIsContactOpen(true);
@@ -221,6 +228,20 @@ const App: React.FC = () => {
                 isLoggedIn={isLoggedIn} 
                 currentUser={currentUser}
             />
+
+            {/* Rating Widget */}
+            <RatingWidget onClick={() => setIsReviewsModalOpen(true)} />
+
+            {/* Reviews Modals */}
+            {isReviewsModalOpen && (
+                <ReviewsModal 
+                    onClose={() => setIsReviewsModalOpen(false)} 
+                    onWriteReview={() => setIsLeaveReviewModalOpen(true)}
+                />
+            )}
+            {isLeaveReviewModalOpen && (
+                <LeaveReviewModal onClose={() => setIsLeaveReviewModalOpen(false)} />
+            )}
 
             {/* Tool Modals - Pop-up Windows */}
             {isTroubleshootModalOpen && (
