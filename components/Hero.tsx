@@ -1,18 +1,20 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { trustBadges } from '../constants';
 import { ServiceType } from '../types';
 import { VoiceAgentOrb } from './VoiceAgentOrb';
-import { generateHeroVideo } from '../services/geminiService';
-import { getVideo, saveVideo } from '../services/videoStorage';
+import { getVideo } from '../services/videoStorage';
 
 interface HeroProps {
     onBookNow: (service: ServiceType) => void;
 }
 
+// Permanent video URL (Professional HVAC footage)
+const PERMANENT_VIDEO_URL = "https://videos.pexels.com/video-files/6195781/6195781-hd_1920_1080_25fps.mp4";
+
 export const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
-    const [videoUrl, setVideoUrl] = useState<string | null>(null);
-    const [isGenerating, setIsGenerating] = useState(false);
+    const [videoUrl, setVideoUrl] = useState<string>(PERMANENT_VIDEO_URL);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     const handleScrollToEstimate = () => {
         document.getElementById('estimate-calculator')?.scrollIntoView({ behavior: 'smooth' });
@@ -21,73 +23,56 @@ export const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
     useEffect(() => {
         const loadVideo = async () => {
             try {
-                // 1. Try to get video from IndexedDB
+                // Check for a locally cached video (if user previously generated one with an API key)
                 const cachedBlob = await getVideo();
                 if (cachedBlob) {
                     const url = URL.createObjectURL(cachedBlob);
                     setVideoUrl(url);
-                    return;
-                }
-
-                // 2. If not found, generate a new one
-                setIsGenerating(true);
-                const result = await generateHeroVideo("Cinematic 8 second video of professional HVAC technicians installing a modern AC system in a beautiful luxury home living room, daylight, 4k");
-                
-                if (result && result instanceof Blob) {
-                    await saveVideo(result);
-                    const url = URL.createObjectURL(result);
-                    setVideoUrl(url);
-                } else if (result && 'error' in result) {
-                    console.warn("Video generation failed:", result.error);
                 }
             } catch (e) {
-                console.error("Error loading hero video:", e);
-            } finally {
-                setIsGenerating(false);
+                console.warn("Could not load cached video, utilizing default.", e);
             }
         };
 
         loadVideo();
     }, []);
 
+    // Ensure video plays when URL is set
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.load();
+            const playPromise = videoRef.current.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Auto-play was prevented by browser policy:", error);
+                });
+            }
+        }
+    }, [videoUrl]);
+
     return (
         <section 
             id="home"
-            className="relative bg-blue-900 text-white py-20 md:py-32 overflow-hidden"
+            className="relative bg-blue-900 text-white py-20 md:py-32 overflow-hidden min-h-[600px] flex items-center justify-center"
         >
             {/* Background Media */}
             <div className="absolute inset-0 z-0">
-                {videoUrl ? (
-                    <video 
-                        key={videoUrl}
-                        src={videoUrl} 
-                        autoPlay 
-                        loop 
-                        muted 
-                        playsInline 
-                        className="w-full h-full object-cover opacity-40 transition-opacity duration-1000"
-                        onPlay={() => console.log("Video started playing")}
-                        onError={(e) => console.error("Video playback error", e)}
-                    />
-                ) : (
-                    <div 
-                        className="w-full h-full bg-cover bg-center opacity-20 transition-opacity duration-500" 
-                        style={{backgroundImage: "url('https://picsum.photos/seed/hvac-bg/1920/1080')"}}
-                    ></div>
-                )}
+                <video 
+                    ref={videoRef}
+                    key={videoUrl}
+                    src={videoUrl} 
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline 
+                    className="w-full h-full object-cover opacity-40"
+                    poster="https://images.unsplash.com/photo-1581094794329-cd1361ddee2f?q=80&w=2787&auto=format&fit=crop"
+                />
                 {/* Overlay Gradient */}
                 <div className="absolute inset-0 bg-blue-900/60 mix-blend-multiply"></div>
             </div>
 
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                {isGenerating && (
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-8">
-                        <span className="bg-blue-800/80 text-blue-200 text-xs px-3 py-1 rounded-full animate-pulse border border-blue-500/50">
-                            Customizing Experience...
-                        </span>
-                    </div>
-                )}
-
                 <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4 drop-shadow-lg">
                     Reliable HVAC Service, When You Need It Most
                 </h1>
